@@ -3,7 +3,11 @@ project(LaserCalibrate)
 
 #set(CMAKE_CXX_STANDARD 14)
 
-find_package( PCL 1.9 REQUIRED)
+find_package(PCL 1.9 REQUIRED)
+if(NOT PCL_FOUND)
+    message(FATAL_ERROR "PCL not FOUND")
+endif()
+
 # find_package(PCL 1.9 REQUIRED REQUIRED COMPONENTS io registration segmentation visualization)
 include_directories( ${PCL_INCLUDE_DIRS} )
 link_directories(${PCL_LIBRARIES_DIRS})

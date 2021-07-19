@@ -16,10 +16,12 @@
 #include <pcl/visualization/pcl_visualizer.h>
 
 
+
 class Utils {
 public:
     void print();
     bool LoadCloudFile(const std::string filename, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
+    bool LoadCloudRGB(const std::string filename, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &point_cloud_ptr);
 
 };
 
