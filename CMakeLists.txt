@@ -3,4 +3,4 @@ project(LaserCalibrate)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(LaserCalibrate main.cpp cmake-build-debug/src/CloudPointExaction.cpp cmake-build-debug/include/CloudPointExaction.h)
+add_executable(LaserCalibrate main.cpp cmake-build-debug/src/CloudPointExaction.cpp cmake-build-debug/include/CloudPointExaction.h cmake-build-debug/src/Utils.cpp cmake-build-debug/src/Utils.h)
