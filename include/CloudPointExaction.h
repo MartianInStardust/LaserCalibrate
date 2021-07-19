@@ -10,7 +10,7 @@ class CloudPointExaction {
 public:
     CloudPointExaction();
 
-    bool LoadCLoudFile(const std::string filename, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
+//    bool LoadCLoudFile(const std::string filename, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
 
 };
 
