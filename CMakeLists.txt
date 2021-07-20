@@ -3,6 +3,7 @@ project(LaserCalibrate)
 
 #set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_BUILD_TYPE Debug)
 find_package(PCL 1.9 REQUIRED)
 if(NOT PCL_FOUND)
     message(FATAL_ERROR "PCL not FOUND")
