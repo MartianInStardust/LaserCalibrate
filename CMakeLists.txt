@@ -34,3 +34,15 @@ target_link_libraries(test
         pcl_process
         ${PCL_LIBRARIES}
         )
+
+add_executable(TestRegistration example/TestRegistration.cpp)
+target_link_libraries(TestRegistration
+        pcl_process
+        ${PCL_LIBRARIES}
+        )
+
+add_executable(DownSample example/DownSample.cpp)
+target_link_libraries(DownSample
+        pcl_process
+        ${PCL_LIBRARIES}
+        )
