@@ -11,7 +11,7 @@ int main(int argc, char **argv)
      // Fill in the cloud data
      pcl::PCDReader reader;
      // Replace the path below with the path where you saved your file
-     reader.read("/home/jin/Downloads/CalibrationDataRight01_CameraB.pcd", *cloud);
+     reader.read("/home/jin/Downloads/BoxLeft_CameraA.pcd", *cloud);
 
      std::cerr << "PointCloud before filtering: " << cloud->width * cloud->height
                << " data points (" << pcl::getFieldsList(*cloud) << ")." << std::endl;
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
                << " data points (" << pcl::getFieldsList(*cloud_filtered) << ")." << std::endl;
 
      pcl::PCDWriter writer;
-     writer.write("/home/jin/Downloads/CalibrationDataRight01_CameraB_downsampled.pcd", *cloud_filtered,
+     writer.write("/home/jin/Downloads/BoxLeft_CameraA_downsampled.pcd", *cloud_filtered,
                   Eigen::Vector4f::Zero(), Eigen::Quaternionf::Identity(), false);
 
      return (0);

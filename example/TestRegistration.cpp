@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	PointCloudT::Ptr cloud_tar(new PointCloudT);
 
 	// 随机填充无序点云
-	cloud_src->width = 6;
+	cloud_src->width = 4;
 	cloud_src->height = 1;
 	cloud_src->is_dense = false;
 	cloud_src->points.resize(cloud_src->width * cloud_src->height);
@@ -128,33 +128,37 @@ int main(int argc, char *argv[])
 	cloud_src->points[3].x = 394.861999511719;
 	cloud_src->points[3].y = 115.015869140625;
 	cloud_src->points[3].z = -141.323944091797;
-	cloud_src->points[4].x = 335.053;
-	cloud_src->points[4].y = 74.867;
-	cloud_src->points[4].z = -146.82;
-	cloud_src->points[5].x = 335.876;
-	cloud_src->points[5].y = 115.068;
-	cloud_src->points[5].z = -146.93;
+	// cloud_src->points[4].x = 335.053;
+	// cloud_src->points[4].y = 74.867;
+	// cloud_src->points[4].z = -146.82;
+	// cloud_src->points[5].x = 335.876;
+	// cloud_src->points[5].y = 115.068;
+	// cloud_src->points[5].z = -146.93;
 
 	*cloud_tar = *cloud_src;
 
-	cloud_tar->points[0].x = 225.330459594727;
-	cloud_tar->points[0].y = 164.301330566406;
-	cloud_tar->points[0].z = 105.436019897461;
-	cloud_tar->points[1].x = 225.725494384766;
-	cloud_tar->points[1].y = 205.428527832031;
-	cloud_tar->points[1].z = 105.630218505859;
-	cloud_tar->points[2].x = 266.394958496094;
-	cloud_tar->points[2].y = 204.8898620605473;
-	cloud_tar->points[2].z = 99.470924377441;
-	cloud_tar->points[3].x = 259.878967285156;
-	cloud_tar->points[3].y = 164.728469848633;
-	cloud_tar->points[3].z = 99.314620971680;
-	cloud_tar->points[4].x = 329.032;
-	cloud_tar->points[4].y = 205.150;
-	cloud_tar->points[4].z = 89.902;
-	cloud_tar->points[5].x = 328.377;
-	cloud_tar->points[5].y = 164.765;
-	cloud_tar->points[5].z = 89.789;
+	cloud_tar->points[0].x = 225.725494384766;
+	cloud_tar->points[0].y = 205.428527832031;
+	cloud_tar->points[0].z = 105.630218505859;
+
+	cloud_tar->points[1].x = 225.330459594727;
+	cloud_tar->points[1].y = 164.301330566406;
+	cloud_tar->points[1].z = 105.436019897461;
+
+	cloud_tar->points[2].x = 265.878967285156;
+	cloud_tar->points[2].y = 164.728469848633;
+	cloud_tar->points[2].z = 99.314620971680;
+
+	cloud_tar->points[3].x = 261.394958496094;
+	cloud_tar->points[3].y = 206.8898620605473;
+	cloud_tar->points[3].z = 100.470924377441;
+
+	// cloud_tar->points[4].x = 329.032;
+	// cloud_tar->points[4].y = 205.150;
+	// cloud_tar->points[4].z = 89.902;
+	// cloud_tar->points[5].x = 328.377;
+	// cloud_tar->points[5].y = 164.765;
+	// cloud_tar->points[5].z = 89.789;
 
 	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ> TESVD;
 	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ>::Matrix4 transformation2;
