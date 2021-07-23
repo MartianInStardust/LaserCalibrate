@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
 
 	//   // 执行点云转换
 	//   pcl::transformPointCloud (*cloud_icp, *cloud_icp, rotMatrix);
+
 	*cloud_tr = *cloud_icp; // 备份cloud_icp赋值给cloud_tr为后期使用
 
 	// 迭代最近点算法
@@ -106,7 +107,7 @@ int main(int argc, char *argv[])
 	PointCloudT::Ptr cloud_tar(new PointCloudT);
 
 	// 随机填充无序点云
-	cloud_src->width = 6;
+	cloud_src->width = 4;
 	cloud_src->height = 1;
 	cloud_src->is_dense = false;
 	cloud_src->points.resize(cloud_src->width * cloud_src->height);
@@ -115,6 +116,8 @@ int main(int argc, char *argv[])
 	//     cloud_in->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
 	//     cloud_in->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
 	// }
+
+	// manually pick 6points and use svd to solve the rotation mattrix
 
 	cloud_src->points[0].x = 435.779754638672;
 	cloud_src->points[0].y = 115.793556213379;
@@ -128,12 +131,12 @@ int main(int argc, char *argv[])
 	cloud_src->points[3].x = 394.861999511719;
 	cloud_src->points[3].y = 115.015869140625;
 	cloud_src->points[3].z = -141.323944091797;
-	cloud_src->points[4].x = 335.053;
-	cloud_src->points[4].y = 74.867;
-	cloud_src->points[4].z = -146.82;
-	cloud_src->points[5].x = 335.876;
-	cloud_src->points[5].y = 115.068;
-	cloud_src->points[5].z = -146.93;
+	// cloud_src->points[4].x = 335.053;
+	// cloud_src->points[4].y = 74.867;
+	// cloud_src->points[4].z = -146.82;
+	// cloud_src->points[5].x = 335.876;
+	// cloud_src->points[5].y = 115.068;
+	// cloud_src->points[5].z = -146.93;
 
 	*cloud_tar = *cloud_src;
 
@@ -149,12 +152,12 @@ int main(int argc, char *argv[])
 	cloud_tar->points[3].x = 259.878967285156;
 	cloud_tar->points[3].y = 164.728469848633;
 	cloud_tar->points[3].z = 99.314620971680;
-	cloud_tar->points[4].x = 329.032;
-	cloud_tar->points[4].y = 205.150;
-	cloud_tar->points[4].z = 89.902;
-	cloud_tar->points[5].x = 328.377;
-	cloud_tar->points[5].y = 164.765;
-	cloud_tar->points[5].z = 89.789;
+	// cloud_tar->points[4].x = 329.032;
+	// cloud_tar->points[4].y = 205.150;
+	// cloud_tar->points[4].z = 89.902;
+	// cloud_tar->points[5].x = 328.377;
+	// cloud_tar->points[5].y = 164.765;
+	// cloud_tar->points[5].z = 89.789;
 
 	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ> TESVD;
 	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ>::Matrix4 transformation2;
@@ -244,7 +247,8 @@ int main(int argc, char *argv[])
 
 	transformation_matrix_temp = icp.getFinalTransformation().cast<double>(); // WARNING /!\ This is not accurate!
 
-	pcl::transformPointCloud(*cloud_icp, *cloud_icp, temp); // 矩阵变换
+	// pcl::transformPointCloud(*cloud_icp, *cloud_icp, temp); // 矩阵变换
+	pcl::transformPointCloud(*cloud_icp, *cloud_icp, transformation_matrix_temp); // 矩阵变换
 	viewer.updatePointCloud(cloud_icp, cloud_icp_color_h, "cloud_icp_v2");
 
 	// 显示
