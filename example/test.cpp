@@ -9,27 +9,25 @@
 #include <pcl/point_types.h>
 #include <pcl/registration/icp.h>
 
-
-
 int main(int argc, char **argv)
 {
-//    std::shared_ptr<Utils> pcl_utility = std::make_shared<Utils>();
-//
-//
-//    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-//
-//    if (!pcl_utility->LoadCloudFile(argv[1], cloud))
-//    {
-//        std::cerr << "failed load cloud file!!";
-//        return (-1);
-//    }
-//
-//    pcl::visualization::CloudViewer viewer ("Simple Cloud Viewer");
-//    viewer.showCloud (cloud);
-//    while (!viewer.wasStopped ())
-//    {
-//    }
-//    return 0;
+    //    std::shared_ptr<Utils> pcl_utility = std::make_shared<Utils>();
+    //
+    //
+    //    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    //
+    //    if (!pcl_utility->LoadCloudFile(argv[1], cloud))
+    //    {
+    //        std::cerr << "failed load cloud file!!";
+    //        return (-1);
+    //    }
+    //
+    //    pcl::visualization::CloudViewer viewer ("Simple Cloud Viewer");
+    //    viewer.showCloud (cloud);
+    //    while (!viewer.wasStopped ())
+    //    {
+    //    }
+    //    return 0;
 
     // 定义输入和输出点云
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in(new pcl::PointCloud<pcl::PointXYZ>);
@@ -46,7 +44,8 @@ int main(int argc, char **argv)
     //     cloud_in->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
     // }
 
-    cloud_in->points[0].x = 435.779754638672;
+    cloud_in->points[0].x =
+        435.779754638672;
     cloud_in->points[0].y = 115.793556213379;
     cloud_in->points[0].z = -137.312057495117;
     cloud_in->points[1].x = 435.918365478516;
@@ -62,9 +61,8 @@ int main(int argc, char **argv)
     std::cout << "Saved " << cloud_in->points.size() << " data points to input:"
               << std::endl;
     for (size_t i = 0; i < cloud_in->points.size(); ++i)
-        std::cout << "    " <<
-                  cloud_in->points[i].x << " " << cloud_in->points[i].y << " " <<
-                  cloud_in->points[i].z << std::endl;
+        std::cout << "    " << cloud_in->points[i].x << " " << cloud_in->points[i].y << " " << cloud_in->points[i].z << std::endl;
+
     *cloud_out = *cloud_in;
     std::cout << "size:" << cloud_out->points.size() << std::endl;
 
@@ -89,8 +87,7 @@ int main(int argc, char **argv)
     std::cout << "Transformed " << cloud_in->points.size() << " data points:"
               << std::endl;
     for (size_t i = 0; i < cloud_out->points.size(); ++i)
-        std::cout << "    " << cloud_out->points[i].x << " " <<
-                  cloud_out->points[i].y << " " << cloud_out->points[i].z << std::endl;
+        std::cout << "    " << cloud_out->points[i].x << " " << cloud_out->points[i].y << " " << cloud_out->points[i].z << std::endl;
     // pcl::visualization::CloudViewer viewer ("Simple Cloud Viewer");
     // viewer.showCloud (cloud_in);
     // while (!viewer.wasStopped ())
@@ -110,8 +107,7 @@ int main(int argc, char **argv)
     // 然后会输出最终变换矩阵的匹配分数和变换矩阵等信息。
     pcl::PointCloud<pcl::PointXYZ> Final;
     icp.align(Final);
-    std::cout << "has converged:" << icp.hasConverged() << " score: " <<
-              icp.getFitnessScore() << std::endl;
+    std::cout << "has converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << std::endl;
     const pcl::Registration<pcl::PointXYZ, pcl::PointXYZ, float>::Matrix4 &matrix = icp.getFinalTransformation();
     std::cout << matrix << std::endl;
     return (0);

@@ -10,7 +10,6 @@
 
 typedef pcl::PointXYZ PointT;
 typedef pcl::PointCloud<PointT> PointCloudT; //定义点云的格式
-
 bool next_iteration = false;
 
 void print4x4Matrix(const Eigen::Matrix4d &matrix) //打印旋转矩阵和平移矩阵
@@ -23,9 +22,7 @@ void print4x4Matrix(const Eigen::Matrix4d &matrix) //打印旋转矩阵和平移
 	printf("t = < %6.3f, %6.3f, %6.3f >\n\n", matrix(0, 3), matrix(1, 3), matrix(2, 3));
 }
 
-
-void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
-						   void *nothing)
+void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event, void *nothing)
 { //使用空格键来增加迭代次数，并更新显示
 	if (event.getKeySym() == "space" && event.keyDown())
 		next_iteration = true;
@@ -35,7 +32,7 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
 
 int main(int argc, char *argv[])
 {
-	
+
 	// 申明点云将要使用的
 	PointCloudT::Ptr cloud_in(new PointCloudT);	 // 原始点云
 	PointCloudT::Ptr cloud_tr(new PointCloudT);	 // 转换后的点云
@@ -81,7 +78,8 @@ int main(int argc, char *argv[])
 			  << std::endl;
 
 	//   //定义旋转矩阵和平移向量Matrix4d是为4*4的矩阵
-	Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity(); //初始化
+	Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity();	  //初始化
+	Eigen::Matrix4d transformation_matrix_temp = Eigen::Matrix4d::Identity(); //初始化
 
 	//   // 旋转矩阵的定义可以参考 ( https://en.wikipedia.org/wiki/Rotation_matrix)
 	//   double theta = M_PI / 8;  // 旋转的角度用弧度的表示方法
@@ -108,10 +106,10 @@ int main(int argc, char *argv[])
 	PointCloudT::Ptr cloud_tar(new PointCloudT);
 
 	// 随机填充无序点云
-	cloud_src->width = 4;
+	cloud_src->width = 6;
 	cloud_src->height = 1;
 	cloud_src->is_dense = false;
-	cloud_src->points.resize(cloud_in->width * cloud_in->height);
+	cloud_src->points.resize(cloud_src->width * cloud_src->height);
 	// for (size_t i = 0; i < cloud_in->points.size(); ++i) {
 	//     cloud_in->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
 	//     cloud_in->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
@@ -130,55 +128,58 @@ int main(int argc, char *argv[])
 	cloud_src->points[3].x = 394.861999511719;
 	cloud_src->points[3].y = 115.015869140625;
 	cloud_src->points[3].z = -141.323944091797;
+	cloud_src->points[4].x = 335.053;
+	cloud_src->points[4].y = 74.867;
+	cloud_src->points[4].z = -146.82;
+	cloud_src->points[5].x = 335.876;
+	cloud_src->points[5].y = 115.068;
+	cloud_src->points[5].z = -146.93;
 
-	
 	*cloud_tar = *cloud_src;
-	
 
-	cloud_tar->points[0].x = 435.779754638672 + 100;
-	cloud_tar->points[0].y = 115.793556213379;
-	cloud_tar->points[0].z = -137.312057495117;
-	cloud_tar->points[1].x = 435.918365478516 + 100;
-	cloud_tar->points[1].y = 74.018363952637;
-	cloud_tar->points[1].z = -136.977874755859;
-	cloud_tar->points[2].x = 394.927856445312 + 100;
-	cloud_tar->points[2].y = 74.891387939453;
-	cloud_tar->points[2].z = -141.068267822266;
-	cloud_tar->points[3].x = 394.861999511719 + 100;
-	cloud_tar->points[3].y = 115.015869140625;
-	cloud_tar->points[3].z = -141.323944091797;
+	cloud_tar->points[0].x = 225.330459594727;
+	cloud_tar->points[0].y = 164.301330566406;
+	cloud_tar->points[0].z = 105.436019897461;
+	cloud_tar->points[1].x = 225.725494384766;
+	cloud_tar->points[1].y = 205.428527832031;
+	cloud_tar->points[1].z = 105.630218505859;
+	cloud_tar->points[2].x = 266.394958496094;
+	cloud_tar->points[2].y = 204.8898620605473;
+	cloud_tar->points[2].z = 99.470924377441;
+	cloud_tar->points[3].x = 259.878967285156;
+	cloud_tar->points[3].y = 164.728469848633;
+	cloud_tar->points[3].z = 99.314620971680;
+	cloud_tar->points[4].x = 329.032;
+	cloud_tar->points[4].y = 205.150;
+	cloud_tar->points[4].z = 89.902;
+	cloud_tar->points[5].x = 328.377;
+	cloud_tar->points[5].y = 164.765;
+	cloud_tar->points[5].z = 89.789;
 
+	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ> TESVD;
+	pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ>::Matrix4 transformation2;
 
+	TESVD.estimateRigidTransformation(*cloud_src, *cloud_tar, transformation2);
 
-	*cloud_icp = *cloud_src;
-	*cloud_in = *cloud_tar;
+	Eigen::Matrix4d temp = transformation2.cast<double>();
 
-	pcl::IterativeClosestPoint<PointT, PointT> icp;
-	//   icp.setRANSACIterations(1000);
-	icp.setMaximumIterations(iterations); //设置最大迭代次数iterations=true
+	print4x4Matrix(temp);
 
-	icp.setInputSource(cloud_icp); //设置输入的点云
-	icp.setInputTarget(cloud_in);  //目标点云
-	icp.setTransformationEpsilon(1e-8);
-	// Set the euclidean distance difference epsilon (criterion 3)
-	icp.setEuclideanFitnessEpsilon(1);
+	// *cloud_icp = *cloud_src;
+	// *cloud_in = *cloud_tar;
 
-	icp.align(*cloud_icp);		 //匹配后源点云
-	icp.setMaximumIterations(1); // 设置为1以便下次调用
-	std::cout << "Applied " << iterations << " ICP iteration(s) in " << time.toc() << " ms" << std::endl;
-
-	if (icp.hasConverged()) //icp.hasConverged ()=1（true）输出变换矩阵的适合性评估
-	{
-		std::cout << "\nICP has converged, score is " << icp.getFitnessScore() << std::endl;
-		std::cout << "\nICP transformation " << iterations << " : cloud_icp -> cloud_in" << std::endl;
-		transformation_matrix = icp.getFinalTransformation().cast<double>();
-		print4x4Matrix(transformation_matrix);
-	}
-	else
-	{
-		PCL_ERROR("\nICP has not converged.\n");
-		return (-1);
-	}
+	// if (icp.hasConverged()) //icp.hasConverged ()=1（true）输出变换矩阵的适合性评估
+	// {
+	// 	std::cout << "\nICP has converged, score is " << icp.getFitnessScore() << std::endl;
+	// 	std::cout << "\nICP transformation " << iterations << " : cloud_icp -> cloud_in" << std::endl;
+	// 	transformation_matrix = icp.getFinalTransformation().cast<double>();
+	// 	print4x4Matrix(transformation_matrix);
+	// }
+	// else
+	// {
+	// 	PCL_ERROR("\nICP has not converged.\n");
+	// 	return (-1);
+	// }
 
 	// 可视化ICP的过程与结果
 	pcl::visualization::PCLVisualizer viewer("ICP demo");
@@ -227,6 +228,25 @@ int main(int argc, char *argv[])
 	// 注册按键回调函数
 	viewer.registerKeyboardCallback(&keyboardEventOccurred, (void *)NULL);
 
+	pcl::IterativeClosestPoint<PointT, PointT> icp;
+	//   icp.setRANSACIterations(1000);
+	icp.setMaximumIterations(iterations); //设置最大迭代次数iterations=true
+
+	icp.setInputSource(cloud_src); //设置输入的点云
+	icp.setInputTarget(cloud_tar); //目标点云
+	icp.setTransformationEpsilon(1e-8);
+	// Set the euclidean distance difference epsilon (criterion 3)
+	icp.setEuclideanFitnessEpsilon(1);
+
+	icp.align(*cloud_src);		 //匹配后源点云
+	icp.setMaximumIterations(1); // 设置为1以便下次调用
+	std::cout << "Applied " << iterations << " ICP iteration(s) in " << time.toc() << " ms" << std::endl;
+
+	transformation_matrix_temp = icp.getFinalTransformation().cast<double>(); // WARNING /!\ This is not accurate!
+
+	pcl::transformPointCloud(*cloud_icp, *cloud_icp, temp); // 矩阵变换
+	viewer.updatePointCloud(cloud_icp, cloud_icp_color_h, "cloud_icp_v2");
+
 	// 显示
 	while (!viewer.wasStopped())
 	{
@@ -235,9 +255,10 @@ int main(int argc, char *argv[])
 		//按下空格键的函数
 		if (next_iteration)
 		{
+
 			// 最近点迭代算法
 			time.tic();
-			icp.align(*cloud_icp);
+			icp.align(*cloud_src);
 			std::cout << "Applied 1 ICP iteration in " << time.toc() << " ms" << std::endl;
 
 			if (icp.hasConverged())
@@ -245,8 +266,11 @@ int main(int argc, char *argv[])
 				printf("\033[11A"); // Go up 11 lines in terminal output.
 				printf("\nICP has converged, score is %+.0e\n", icp.getFitnessScore());
 				std::cout << "\nICP transformation " << ++iterations << " : cloud_icp -> cloud_in" << std::endl;
-				transformation_matrix *= icp.getFinalTransformation().cast<double>(); // WARNING /!\ This is not accurate!
-				print4x4Matrix(transformation_matrix);								  // 打印矩阵变换
+				transformation_matrix_temp = icp.getFinalTransformation().cast<double>(); // WARNING /!\ This is not accurate!
+				transformation_matrix *= icp.getFinalTransformation().cast<double>();	  // WARNING /!\ This is not accurate!
+				print4x4Matrix(transformation_matrix);
+
+				pcl::transformPointCloud(*cloud_icp, *cloud_icp, transformation_matrix_temp); // 打印矩阵变换
 
 				ss.str("");
 				ss << iterations;
